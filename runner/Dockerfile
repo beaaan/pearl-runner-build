@@ -77,14 +77,15 @@ ARG PEARL_BIN_VER=v1.0.2
 RUN apt-get update -y \
  && apt-get install -y --no-install-recommends ca-certificates curl \
  && rm -rf /var/lib/apt/lists/*
-RUN curl -fsSL -o /tmp/pearl.tar.gz \
-      "https://github.com/pearl-research-labs/pearl/releases/download/${PEARL_TAG}/go-binaries-linux-amd64-${PEARL_BIN_VER}.tar.gz" \
- && curl -fsSL -o /tmp/checksums.txt \
-      "https://github.com/pearl-research-labs/pearl/releases/download/${PEARL_TAG}/checksums.txt" \
+RUN set -e \
  && cd /tmp \
- && grep "go-binaries-linux-amd64-${PEARL_BIN_VER}.tar.gz" checksums.txt | sha256sum -c - \
+ && curl -fsSL -O "https://github.com/pearl-research-labs/pearl/releases/download/${PEARL_TAG}/go-binaries-linux-amd64-${PEARL_BIN_VER}.tar.gz" \
+ && curl -fsSL -O "https://github.com/pearl-research-labs/pearl/releases/download/${PEARL_TAG}/checksums.txt" \
+ && grep "go-binaries-linux-amd64-${PEARL_BIN_VER}.tar.gz" checksums.txt \
+      | sed 's| \./.*/| |' \
+      | sha256sum -c - \
  && mkdir -p /out \
- && tar -xzf pearl.tar.gz -C /out \
+ && tar -xzf "go-binaries-linux-amd64-${PEARL_BIN_VER}.tar.gz" -C /out \
  && ls -la /out
 
 # ---- Stage 3: runtime image -----------------------------------------------
