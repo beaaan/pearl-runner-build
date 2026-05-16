@@ -22,16 +22,16 @@ jobs:
     timeout-minutes: 240
 
     steps:
-      - name: Maximize build disk
-        uses: easimon/maximize-build-space@v10
+      - name: Free disk space (in place)
+        uses: jlumbroso/free-disk-space@main
         with:
-          root-reserve-mb: 8192
-          temp-reserve-mb: 1024
-          remove-dotnet: "true"
-          remove-android: "true"
-          remove-haskell: "true"
-          remove-codeql: "true"
-          remove-docker-images: "true"
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: false
 
       - name: Check out this repo (for the runner overlay)
         uses: actions/checkout@v4
